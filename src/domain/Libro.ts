@@ -11,7 +11,7 @@ export class Libro extends RecursoBiblioteca {
     public getAutor():string{
         return this.autor;
     }
-    public obtenerDuracionPrestamo(): number {
+    public obtenerDuracionPrestamo(): number{
         return 7;
     }
 }
