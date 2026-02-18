@@ -1,9 +1,10 @@
+import { Categoria } from "./Categoria";
 import { RecursoBiblioteca } from "./RecursoBiblioteca";
 
 export class Revista extends RecursoBiblioteca{
     private numeroEdicion: number;
 
-    constructor(id: number,titulo: string,categoria: string,numeroEdicion: number){
+    constructor(id: number,titulo: string,categoria:Categoria,numeroEdicion: number){
         super(id, titulo, categoria);
         this.numeroEdicion = numeroEdicion;
     }

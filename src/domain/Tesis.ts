@@ -1,10 +1,11 @@
+import { Categoria } from "./Categoria";
 import { RecursoBiblioteca } from "./RecursoBiblioteca";
 
 export class Tesis extends RecursoBiblioteca{
     private autor: string;
     private anioPublicacion: number;
 
-    constructor(id: number,titulo: string,categoria: string,autor: string,anioPublicacion: number){
+    constructor(id: number,titulo: string,categoria: Categoria,autor: string,anioPublicacion: number){
         super(id, titulo, categoria);
         this.autor = autor;
         this.anioPublicacion = anioPublicacion;

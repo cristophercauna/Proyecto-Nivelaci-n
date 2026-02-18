@@ -1,3 +1,4 @@
+import { Categoria } from "./Categoria";
 export enum EstadoRecurso{
     DISPONIBLE = "DISPONIBLE",
     PRESTADO = "PRESTADO",
@@ -8,10 +9,10 @@ export enum EstadoRecurso{
 export abstract class RecursoBiblioteca{
     protected id: number;
     protected titulo: string;
-    protected categoria: string;
+    protected categoria: Categoria;
     protected estado: EstadoRecurso;
 
-    constructor(id: number, titulo: string, categoria: string){
+    constructor(id: number, titulo: string, categoria: Categoria){
         this.id = id;
         this.titulo = titulo;
         this.categoria = categoria;
@@ -26,7 +27,7 @@ export abstract class RecursoBiblioteca{
         return this.titulo;
     }
 
-    public getCategoria(): string{
+    public getCategoria(): Categoria{
         return this.categoria;
     }
 
