@@ -5,7 +5,7 @@ export class Prestamo{
     private fechaLimite : Date;
     constructor(private usuario:Usuario,private recurso: RecursoBiblioteca, private fechaPrestamo: Date){
         this.fechaLimite = new Date(fechaPrestamo);
-        this.fechaLimite.getDate() + this.recurso.obtenerDuracionPrestamo();
+        this.fechaLimite.setDate(this.fechaLimite.getDate() + this.recurso.obtenerDuracionPrestamo());
         this.recurso.cambiarEstado(EstadoRecurso.PRESTADO);
     }
     public marcarDevolucion(){
