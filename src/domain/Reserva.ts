@@ -4,6 +4,9 @@ import { RecursoBiblioteca, EstadoRecurso } from "./RecursoBiblioteca";
 export class Reserva{
     private fechaReserva: Date;
     constructor(private usuario: Usuario,private recurso: RecursoBiblioteca){
+    if (this.recurso.getEstado() !== EstadoRecurso.DISPONIBLE) {
+        throw new Error("El recurso no está disponible");
+    }
         this.fechaReserva = new Date();
         this.recurso.cambiarEstado(EstadoRecurso.RESERVADO);
     }
