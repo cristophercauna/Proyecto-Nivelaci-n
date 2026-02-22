@@ -22,4 +22,7 @@ export class Multa{
     public getFecha(): Date{
         return this.fecha;
     }
+    public estaPendiente(): boolean {
+        return this.estado === EstadoMulta.PENDIENTE;
+    }
 }
