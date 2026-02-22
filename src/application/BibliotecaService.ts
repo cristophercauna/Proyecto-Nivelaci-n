@@ -22,22 +22,38 @@ export class BibliotecaService {
         );
     }
     public prestarRecurso(usuario: Usuario, recurso: RecursoBiblioteca): void {
-
         if (recurso.getEstado() !== EstadoRecurso.DISPONIBLE) {
             throw new Error("El recurso no está disponible");
         }
-
         const prestamosActivos = this.obtenerPrestamosActivos(usuario);
-
         if (prestamosActivos.length >= usuario.obtenerLimitePrestamos()) {
             throw new Error("Límite de préstamos alcanzado");
         }
-
         const prestamo = new Prestamo(usuario, recurso, new Date());
         this.prestamos.push(prestamo);
     }
-    
-
+    public devolverRecurso(recurso: RecursoBiblioteca): void {
+    const prestamo = this.prestamos.find(p =>p.getRecurso().getId() === recurso.getId());
+    if (!prestamo) {
+        throw new Error("No existe préstamo para este recurso");
+    }
+    const estabaVencido = prestamo.estaVencido();
+    prestamo.marcarDevolucion();
+    if (estabaVencido) {
+        const diasRetraso = this.calcularDiasRetraso(prestamo);
+        const monto = diasRetraso * 5; // 5 por día ejemplo
+        const multa = new Multa(prestamo.getUsuario(),monto,`Retraso de ${diasRetraso} día(s) en la devolución`);
+        this.multas.push(multa);
+        }
+    }
+    private calcularDiasRetraso(prestamo: Prestamo): number {
+        const hoy = new Date();
+        const fechaLimite = prestamo.getFechaLimite();
+        const diferencia = hoy.getTime() - fechaLimite.getTime();
+        const dias = Math.ceil(diferencia / (1000 * 60 * 60 * 24));
+        return dias > 0 ? dias : 0;
+    }
 }
+
 
 
