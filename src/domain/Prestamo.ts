@@ -12,6 +12,9 @@ export class Prestamo{
         this.fechaDevolucion = new Date();
         this.recurso.cambiarEstado(EstadoRecurso.DISPONIBLE); 
     }
+    public estaDevuelto(): boolean {
+        return this.fechaDevolucion !== undefined;
+    }
     public estaVencido(): boolean{
         const hoy = new Date();
         return !this.fechaDevolucion && hoy > this.fechaLimite;
