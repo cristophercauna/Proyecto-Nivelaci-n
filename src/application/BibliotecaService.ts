@@ -17,9 +17,9 @@ export class BibliotecaService {
         this.recursos.push(recurso);
     }
     private obtenerPrestamosActivos(usuario: Usuario): Prestamo[]{
-        return this.prestamos.filter(p =>p.getUsuario().getId() === usuario.getId() && !p.estaDevuelto);
+        return this.prestamos.filter(p =>p.getUsuario().getId() === usuario.getId() && !p.estaDevuelto());
     }
-     private tieneMultasPendientes(usuario: Usuario): boolean{
+    private tieneMultasPendientes(usuario: Usuario): boolean{
         return this.multas.some(m =>m.getUsuario().getId() === usuario.getId() &&m.estaPendiente());
     }
     public prestarRecurso(usuario: Usuario, recurso: RecursoBiblioteca): void{
@@ -34,7 +34,7 @@ export class BibliotecaService {
         this.prestamos.push(prestamo);
     }
     public devolverRecurso(recurso: RecursoBiblioteca): void {
-    const prestamo = this.prestamos.find(p =>p.getRecurso().getId() === recurso.getId());
+    const prestamo = this.prestamos.find(p =>p.getRecurso().getId() === recurso.getId() && !p.estaDevuelto());
     if (!prestamo) {
         throw new Error("No existe préstamo para este recurso");
     }
