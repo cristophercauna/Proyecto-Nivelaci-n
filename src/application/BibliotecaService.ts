@@ -54,6 +54,13 @@ export class BibliotecaService {
         const dias = Math.ceil(diferencia / (1000 * 60 * 60 * 24));
         return dias > 0 ? dias : 0;
     }
+    public pagarMulta(usuario: Usuario): void{
+    const multaPendiente = this.multas.find(m =>m.getUsuario().getId() === usuario.getId() &&m.estaPendiente());
+    if (!multaPendiente){
+        throw new Error("El usuario no tiene multas pendientes");
+    }
+    multaPendiente.pagar();
+    }
 }
 
 
