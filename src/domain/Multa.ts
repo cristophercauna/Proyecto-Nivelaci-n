@@ -10,6 +10,9 @@ export class Multa{
         this.fecha = new Date();
         this.estado= EstadoMulta.PENDIENTE;
     }
+    public pagar(): void {
+        this.estado = EstadoMulta.PAGADA;
+    }
     public getUsuario(): Usuario{
         return this.usuario;
     }
