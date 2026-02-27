@@ -26,7 +26,7 @@ export class BibliotecaService {
         if(this.tieneMultasPendientes(usuario)){
             throw new Error("El usuario tiene multas pendientes");
         }
-        if (recurso.getEstado() !== EstadoRecurso.DISPONIBLE) {
+        if (!recurso.estaDisponible()){
             throw new Error("El recurso no está disponible");
         }
         const prestamosActivos = this.obtenerPrestamosActivos(usuario);
