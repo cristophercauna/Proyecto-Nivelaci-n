@@ -23,6 +23,9 @@ export class BibliotecaService {
         return this.multas.some(m =>m.getUsuario().getId() === usuario.getId() &&m.estaPendiente());
     }
     public prestarRecurso(usuario: Usuario, recurso: RecursoBiblioteca): void{
+        if(this.tieneMultasPendientes(usuario)){
+            throw new Error("El usuario tiene multas pendientes");
+        }
         if (recurso.getEstado() !== EstadoRecurso.DISPONIBLE) {
             throw new Error("El recurso no está disponible");
         }
