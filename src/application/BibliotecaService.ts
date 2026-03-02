@@ -16,6 +16,13 @@ export class BibliotecaService {
     public registrarRecurso(recurso: RecursoBiblioteca): void {
         this.recursos.push(recurso);
     }
+    private usuarioRegistrado(usuario: Usuario): boolean {
+        return this.usuarios.some(u => u.getId() === usuario.getId());
+    }
+
+    private recursoRegistrado(recurso: RecursoBiblioteca): boolean {
+        return this.recursos.some(r => r.getId() === recurso.getId());
+    }
     private obtenerPrestamosActivos(usuario: Usuario): Prestamo[]{
         return this.prestamos.filter(p =>p.getUsuario().getId() === usuario.getId() && !p.estaDevuelto());
     }
