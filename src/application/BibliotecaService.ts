@@ -30,6 +30,12 @@ export class BibliotecaService {
         return this.multas.some(m =>m.getUsuario().getId() === usuario.getId() &&m.estaPendiente());
     }
     public prestarRecurso(usuario: Usuario, recurso: RecursoBiblioteca): void{
+        if (!this.usuarioRegistrado(usuario)) {
+            throw new Error("Usuario no registrado en el sistema");
+        }
+        if (!this.recursoRegistrado(recurso)) {
+            throw new Error("Recurso no registrado en el sistema");
+        }
         if(this.tieneMultasPendientes(usuario)){
             throw new Error("El usuario tiene multas pendientes");
         }
