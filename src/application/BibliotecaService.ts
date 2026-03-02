@@ -75,6 +75,19 @@ export class BibliotecaService {
         const dias = Math.ceil(diferencia / (1000 * 60 * 60 * 24));
         return dias > 0 ? dias : 0;
     }
+    public reservarRecurso(usuario: Usuario, recurso: RecursoBiblioteca): void {
+        if(!this.usuarioRegistrado(usuario)){
+            throw new Error("Usuario no registrado");
+        }
+        if(!this.recursoRegistrado(recurso)){
+            throw new Error("Recurso no registrado");
+        }
+        if(recurso.estaDisponible()){
+            throw new Error("El recurso está disponible, no necesita reserva");
+        }
+        const reserva = new Reserva(usuario, recurso);
+        this.reservas.push(reserva);
+    }
     public pagarMulta(usuario: Usuario): void{
     const multaPendiente = this.multas.find(m =>m.getUsuario().getId() === usuario.getId() &&m.estaPendiente());
     if (!multaPendiente){
