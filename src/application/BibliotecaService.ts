@@ -3,6 +3,7 @@ import { RecursoBiblioteca,EstadoRecurso } from "../domain/RecursoBiblioteca";
 import { Prestamo } from "../domain/Prestamo";
 import { Reserva } from "../domain/Reserva";
 import { Multa,EstadoMulta } from "../domain/Multa";
+import { error } from "node:console";
 export class BibliotecaService {
     private usuarios: Usuario[] = [];
     private recursos: RecursoBiblioteca[] = [];
@@ -11,9 +12,15 @@ export class BibliotecaService {
     private multas: Multa[] = [];
 
     public registrarUsuario(usuario: Usuario): void {
+        if(this.usuarioRegistrado(usuario)){
+            throw new Error("El usuario ya esta registrado")
+        }
         this.usuarios.push(usuario);
     }
     public registrarRecurso(recurso: RecursoBiblioteca): void {
+        if (this.recursoRegistrado(recurso)) {
+            throw new Error("El recurso ya está registrado");
+        }
         this.recursos.push(recurso);
     }
     private usuarioRegistrado(usuario: Usuario): boolean {
@@ -29,6 +36,12 @@ export class BibliotecaService {
     private tieneMultasPendientes(usuario: Usuario): boolean{
         return this.multas.some(m =>m.getUsuario().getId() === usuario.getId() &&m.estaPendiente());
     }
+    private yaTienePrestado(usuario: Usuario, recurso: RecursoBiblioteca): boolean {
+        return this.prestamos.some(p => p.getUsuario().getId() === usuario.getId() && p.getRecurso().getId() === recurso.getId() &&! p.estaDevuelto());
+    }
+     private yaReservado(usuario: Usuario, recurso: RecursoBiblioteca): boolean {
+        return this.reservas.some(r => r.getUsuario().getId() === usuario.getId() && r.getRecurso().getId() === recurso.getId());
+    }
     public prestarRecurso(usuario: Usuario, recurso: RecursoBiblioteca): void{
         if (!this.usuarioRegistrado(usuario)) {
             throw new Error("Usuario no registrado en el sistema");
@@ -38,6 +51,9 @@ export class BibliotecaService {
         }
         if(this.tieneMultasPendientes(usuario)){
             throw new Error("El usuario tiene multas pendientes");
+        }
+        if(this.yaTienePrestado(usuario,recurso)){
+            throw new Error ("El usuario ya tiene este recurso prestado");
         }
         if (!recurso.estaDisponible()){
             throw new Error("El recurso no está disponible");
@@ -82,6 +98,12 @@ export class BibliotecaService {
         if(!this.recursoRegistrado(recurso)){
             throw new Error("Recurso no registrado");
         }
+        if(this.yaTienePrestado(usuario, recurso)){
+            throw new Error("El usuario ya tiene este recurso prestado");
+        }
+        if(this.yaReservado(usuario, recurso)){
+            throw new Error("El usuario ya tiene una reserva para este recurso");
+        }
         if(recurso.estaDisponible()){
             throw new Error("El recurso está disponible, no necesita reserva");
         }
@@ -89,11 +111,26 @@ export class BibliotecaService {
         this.reservas.push(reserva);
     }
     public pagarMulta(usuario: Usuario): void{
-    const multaPendiente = this.multas.find(m =>m.getUsuario().getId() === usuario.getId() &&m.estaPendiente());
-    if (!multaPendiente){
-        throw new Error("El usuario no tiene multas pendientes");
+        const multaPendiente = this.multas.find(m =>m.getUsuario().getId() === usuario.getId() &&m.estaPendiente());
+        if (!multaPendiente){
+            throw new Error("El usuario no tiene multas pendientes");
+        }
+        multaPendiente.pagar();
     }
-    multaPendiente.pagar();
+    public listarPrestamos(): Prestamo[]{
+        return [...this.prestamos];
+    }
+    public listarMultas(): Multa[]{
+        return [...this.multas];
+    }
+    public listarRecursos(): RecursoBiblioteca[]{
+        return [...this.recursos];
+    }
+    public listarUsuarios(): Usuario[]{
+        return [...this.usuarios];
+    }
+    public listarReservas(): Reserva[]{
+        return [...this.reservas];
     }
 }
 
