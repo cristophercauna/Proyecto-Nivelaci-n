@@ -1,0 +1,6 @@
+import { Usuario } from "./Usuario";
+export class Docente extends Usuario {
+    public obtenerLimitePrestamos(): number{
+        return 5;
+    }
+}
