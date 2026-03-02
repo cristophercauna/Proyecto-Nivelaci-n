@@ -1,4 +1,3 @@
-import { error } from "node:console";
 import { Categoria } from "./Categoria";
 export enum EstadoRecurso{
     DISPONIBLE = "DISPONIBLE",
@@ -37,7 +36,7 @@ export abstract class RecursoBiblioteca{
     }
 
     public cambiarEstado(nuevoEstado: EstadoRecurso): void{
-        if(this.estado = nuevoEstado){
+        if(this.estado === nuevoEstado){
             throw new Error("El recurso ya tiene ese estado");
         }
     }
