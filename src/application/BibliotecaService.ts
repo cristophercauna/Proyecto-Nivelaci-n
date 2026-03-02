@@ -62,6 +62,11 @@ export class BibliotecaService {
         const multa = new Multa(prestamo.getUsuario(),monto,`Retraso de ${diasRetraso} día(s) en la devolución`);
         this.multas.push(multa);
         }
+        const reserva = this.reservas.find(r => r.getRecurso().getId() === recurso.getId());
+        if(reserva){
+            this.prestarRecurso(reserva.getUsuario(), recurso);
+            this.reservas = this.reservas.filter(r => r !== reserva);
+        }
     }
     private calcularDiasRetraso(prestamo: Prestamo): number {
         const hoy = new Date();
