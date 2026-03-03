@@ -18,6 +18,9 @@ export class Prestamo{
         this.fechaDevolucion = new Date();
         this.recurso.cambiarEstado(EstadoRecurso.DISPONIBLE); 
     }
+    public forzarVencimiento(dias: number): void {
+        this.fechaLimite.setDate(this.fechaLimite.getDate() - dias);
+    }
     public estaDevuelto(): boolean {
         return this.fechaDevolucion !== undefined;
     }
