@@ -8,10 +8,20 @@ import { Categoria } from "../domain/Categoria";
 const prompt = promptSync();
 const biblioteca = new BibliotecaService();
 
+const green = "\x1b[32m";
+const red = "\x1b[31m";
+const yellow = "\x1b[33m";
+const cyan = "\x1b[36m";
+const reset = "\x1b[0m";
+
 let opcion: string;
 
 do {
-    console.log("\n=== SISTEMA BIBLIOTECA ===");
+    console.clear();
+    console.log(cyan + "╔══════════════════════════════╗");
+    console.log(cyan + "║      SISTEMA BIBLIOTECA      ║");
+    console.log(cyan + "╚══════════════════════════════╝" + reset);
+
     console.log("1. Registrar usuario");
     console.log("2. Registrar libro");
     console.log("3. Prestar libro");
@@ -25,11 +35,11 @@ do {
     console.log("11. Forzar vencimiento de préstamo");
     console.log("12. Salir");
 
-    opcion = prompt("Seleccione una opción: ");
+    opcion = prompt(yellow + "\nSeleccione una opción: " + reset);
 
     switch (opcion) {
-
         case "1":
+            console.log("\n" + cyan + "--- Registro de Usuario ---" + reset);
             const idUsuario = Number(prompt("ID: "));
             const nombre = prompt("Nombre: ");
             const tipo = prompt("Tipo (1=Estudiante, 2=Docente): ");
@@ -40,13 +50,14 @@ do {
                 } else {
                     biblioteca.registrarUsuario(new Docente(idUsuario, nombre));
                 }
-                console.log("Usuario registrado correctamente ✔");
+                console.log(green + "✔ Usuario registrado correctamente" + reset);
             } catch (error: any) {
-                console.log(error.message);
+                console.log(red + "❌ " + error.message + reset);
             }
             break;
 
         case "2":
+            console.log("\n" + cyan + "--- Registro de Libro ---" + reset);
             const idLibro = Number(prompt("ID Libro: "));
             const titulo = prompt("Título: ");
             const autor = prompt("Autor: ");
@@ -59,66 +70,80 @@ do {
 
             try {
                 biblioteca.registrarRecurso(libro);
-                console.log("Libro registrado correctamente ✔");
+                console.log(green + "✔ Libro registrado correctamente" + reset);
             } catch (error: any) {
-                console.log(error.message);
+                console.log(red + "❌ " + error.message + reset);
             }
             break;
 
         case "3":
+            console.log("\n" + cyan + "--- Préstamo de Libro ---" + reset);
             const idUserPrestamo = Number(prompt("ID Usuario: "));
             const idLibroPrestamo = Number(prompt("ID Libro: "));
-
             const mensaje = biblioteca.prestarPorId(idUserPrestamo, idLibroPrestamo);
-            console.log(mensaje);
+            console.log(mensaje.includes("exitosamente") ? green + "✔ " + mensaje + reset : red + "❌ " + mensaje + reset);
             break;
 
         case "4":
-            console.log("\n=== USUARIOS ===");
-            biblioteca.listarUsuarios().forEach(u =>console.log(`ID: ${u.getId()} - Nombre: ${u.getNombre()}`));
+            console.log("\n" + cyan + "=== LISTA DE USUARIOS ===" + reset);
+            biblioteca.listarUsuarios().forEach(u =>
+                console.log(`👤 ID: ${u.getId()} - Nombre: ${u.getNombre()}`)
+            );
             break;
 
         case "5":
-            console.log("\n=== RECURSOS ===");
-            biblioteca.listarRecursos().forEach(r => console.log(`ID: ${r.getId()} - Título: ${r.getTitulo()} - Estado: ${r.getEstado()}`));
+            console.log("\n" + cyan + "=== LISTA DE RECURSOS ===" + reset);
+            biblioteca.listarRecursos().forEach(r =>
+                console.log(`📚 ID: ${r.getId()} - Título: ${r.getTitulo()} - Estado: ${r.getEstado()}`)
+            );
             break;
 
         case "6":
-            const idLibrO = Number(prompt("ID Libro: "));
-            console.log(biblioteca.devolverPorId(idLibrO))
+            const idLibroDevolver = Number(prompt("ID Libro: "));
+            console.log(biblioteca.devolverPorId(idLibroDevolver));
             break;
+
         case "7":
             const idUserReserva = Number(prompt("ID Usuario: "));
             const idRecursoReserva = Number(prompt("ID Recurso: "));
             const recurso = biblioteca.listarRecursos().find(r => r.getId() === idRecursoReserva);
             if (recurso){
                 console.log("Estado del recurso:", recurso.getEstado());
-                console.log("¿Está disponible?:", recurso.estaDisponible());
+                console.log("¿Disponible?:", recurso.estaDisponible() ? green + "✔ Sí" + reset : red + "❌ No" + reset);
             }
             console.log(biblioteca.reservarPorId(idUserReserva, idRecursoReserva));
             break;
+
         case "8":
             const idUserMulta = Number(prompt("ID Usuario: "));
             console.log(biblioteca.pagarMultaPorId(idUserMulta));
             break;
+
         case "9":
-            console.log("\n=== PRÉSTAMOS ===");
-            biblioteca.listarPrestamos().forEach(p =>console.log(`Usuario: ${p.getUsuario().getNombre()} | Recurso: ${p.getRecurso().getTitulo()} | Devuelto: ${p.estaDevuelto()}`));
+            const idUserPrestamos = Number(prompt("ID Usuario: "));
+            console.log(biblioteca.listarPrestamosPorUsuario(idUserPrestamos));
             break;
+
         case "10":
-            console.log("\n=== MULTAS ===");
-            biblioteca.listarMultas().forEach(m => console.log(`Usuario: ${m.getUsuario().getNombre()} | Estado: ${m.getEstado()}`));
+            const idUserMultas = Number(prompt("ID Usuario: "));
+            console.log(biblioteca.listarMultasPorUsuario(idUserMultas));
             break;
+
         case "11":
             const idUser = Number(prompt("ID Usuario: "));
-            const idLiBro = Number(prompt("ID Libro: "));
-            const dias = Number(prompt("¿Cuántos días de retraso simular?: "));
-            console.log(biblioteca.forzarVencimientoPrestamo(idUser, idLiBro, dias));
+            const idLibroSimular = Number(prompt("ID Libro: "));
+            const dias = Number(prompt("Días de retraso: "));
+            console.log(biblioteca.forzarVencimientoPrestamo(idUser, idLibroSimular, dias));
             break;
+
         case "12":
-            console.log("Saliendo del sistema... ¡Hasta luego!");
+            console.log(green + "Saliendo del sistema... ¡Hasta luego! 👋" + reset);
             break;       
+
         default:
-            console.log("Opción inválida");
+            console.log(red + "❌ Opción inválida" + reset);
     }
+
+    prompt("\nPresione Enter para continuar...");
+
 } while (opcion !== "12");
