@@ -28,4 +28,7 @@ export class Multa{
     public estaPendiente(): boolean {
         return this.estado === EstadoMulta.PENDIENTE;
     }
+    public getEstado(): EstadoMulta {
+        return this.estado;
+    }
 }
