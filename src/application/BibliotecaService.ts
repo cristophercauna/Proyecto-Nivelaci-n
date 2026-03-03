@@ -187,12 +187,30 @@ export class BibliotecaService {
         }
         multaPendiente.pagar();
     }
-    public listarPrestamos(): Prestamo[]{
-        return [...this.prestamos];
+    public listarPrestamosPorUsuario(idUsuario: number): string{
+    const usuario = this.usuarios.find(u => u.getId() === idUsuario);
+    if(!usuario){
+        return "Usuario no encontrado";
     }
-    public listarMultas(): Multa[]{
-        return [...this.multas];
+    const prestamosUsuario = this.prestamos.filter(p => p.getUsuario().getId() === idUsuario && !p.estaDevuelto());
+    if(prestamosUsuario.length === 0){
+        return "El usuario no tiene préstamos activos";
     }
+    return prestamosUsuario.map(p =>`Libro ID: ${p.getRecurso().getId()} - Vence: ${p.getFechaLimite().toDateString()}`).join("\n");
+    }
+
+    public listarMultasPorUsuario(idUsuario: number): string{
+    const usuario = this.usuarios.find(u => u.getId() === idUsuario);
+    if(!usuario){
+        return "Usuario no encontrado";
+    }
+    const multasUsuario = this.multas.filter(m =>m.getUsuario().getId() === idUsuario);
+    if(multasUsuario.length === 0){
+        return "El usuario no tiene multas";
+    }
+    return multasUsuario.map(m =>`Monto: ${m.getMonto()} - Estado: ${m.getEstado()}`).join("\n");
+    }
+    
     public listarRecursos(): RecursoBiblioteca[]{
         return [...this.recursos];
     }
