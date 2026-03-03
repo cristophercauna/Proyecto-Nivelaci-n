@@ -102,6 +102,50 @@ export class BibliotecaService {
             this.reservas = this.reservas.filter(r => r !== reserva);
         }
     }
+    public devolverPorId(idRecurso: number): string{
+        const recurso = this.recursos.find(r => r.getId() === idRecurso);
+        if(!recurso){
+            return "Recurso no encontrado";
+        }
+
+        try{
+            this.devolverRecurso(recurso);
+            return "Recurso devuelto correctamente ✔";
+        }catch (error: any){
+            return error.message;
+        }
+    }
+    public reservarPorId(idUsuario: number, idRecurso: number): string{
+    const usuario = this.usuarios.find(u => u.getId() === idUsuario);
+    if(!usuario){
+        return "Usuario no encontrado";
+    }
+
+    const recurso = this.recursos.find(r => r.getId() === idRecurso);
+    if(!recurso){
+        return "Recurso no encontrado";
+    }
+
+    try{
+        this.reservarRecurso(usuario, recurso);
+        return "Reserva realizada correctamente ✔";
+    }catch(error: any){
+        return error.message;
+        }
+    }
+    public pagarMultaPorId(idUsuario: number): string {
+    const usuario = this.usuarios.find(u => u.getId() === idUsuario);
+    if(!usuario){
+        return "Usuario no encontrado";
+    }
+
+    try{
+        this.pagarMulta(usuario);
+        return "Multa pagada correctamente ✔";
+    } catch (error: any) {
+        return error.message;
+    }
+    }
     private calcularDiasRetraso(prestamo: Prestamo): number {
         const hoy = new Date();
         const fechaLimite = prestamo.getFechaLimite();
@@ -128,6 +172,14 @@ export class BibliotecaService {
         const reserva = new Reserva(usuario, recurso);
         this.reservas.push(reserva);
     }
+    public forzarVencimientoPrestamo(idUsuario: number, idRecurso: number, dias: number): string {
+    const prestamo = this.prestamos.find(p => p.getUsuario().getId() === idUsuario && p.getRecurso().getId() === idRecurso && !p.estaDevuelto());
+    if(!prestamo){
+        return "No existe préstamo activo para ese usuario y recurso";
+    }
+    prestamo.forzarVencimiento(dias);
+    return `Préstamo forzado a vencido hace ${dias} día(s) ✔`;
+}
     public pagarMulta(usuario: Usuario): void{
         const multaPendiente = this.multas.find(m =>m.getUsuario().getId() === usuario.getId() &&m.estaPendiente());
         if (!multaPendiente){
