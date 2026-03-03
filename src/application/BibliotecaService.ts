@@ -42,6 +42,24 @@ export class BibliotecaService {
      private yaReservado(usuario: Usuario, recurso: RecursoBiblioteca): boolean {
         return this.reservas.some(r => r.getUsuario().getId() === usuario.getId() && r.getRecurso().getId() === recurso.getId());
     }
+    public prestarPorId(idUsuario: number, idRecurso: number): string {
+    const usuario = this.usuarios.find(u => u.getId() === idUsuario);
+    if (!usuario) {
+        return "Usuario no encontrado";
+    }
+
+    const recurso = this.recursos.find(r => r.getId() === idRecurso);
+    if (!recurso) {
+        return "Recurso no encontrado";
+    }
+
+    try {
+        this.prestarRecurso(usuario, recurso);
+        return "Préstamo realizado correctamente ✔";
+    } catch (error: any) {
+        return error.message;
+    }
+}
     public prestarRecurso(usuario: Usuario, recurso: RecursoBiblioteca): void{
         if (!this.usuarioRegistrado(usuario)) {
             throw new Error("Usuario no registrado en el sistema");
