@@ -26,7 +26,9 @@ export abstract class RecursoBiblioteca{
     public getTitulo(): string{
         return this.titulo;
     }
-
+    public estaPrestado() : boolean{
+        return this.estado === EstadoRecurso.PRESTADO;
+    }
     public getCategoria(): Categoria{
         return this.categoria;
     }
@@ -36,9 +38,7 @@ export abstract class RecursoBiblioteca{
     }
 
     public cambiarEstado(nuevoEstado: EstadoRecurso): void{
-        if(this.estado === nuevoEstado){
-            throw new Error("El recurso ya tiene ese estado");
-        }
+        this.estado = nuevoEstado;
     }
     public estaDisponible(): boolean{
         return this.estado === EstadoRecurso.DISPONIBLE;
