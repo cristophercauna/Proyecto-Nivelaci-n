@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Sistema Biblioteca</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>📚 Sistema de Biblioteca</h1>
+
+    <div class="card">
+        <h2>Registrar Usuario</h2>
+        <input type="number" id="id" placeholder="ID">
+        <input type="text" id="nombre" placeholder="Nombre">
+        <select id="tipo">
+            <option value="estudiante">Estudiante</option>
+            <option value="docente">Docente</option>
+        </select>
+        <button onclick="registrarUsuario()">Registrar</button>
+    </div>
+
+    <div class="card">
+        <h2>Usuarios Registrados</h2>
+        <button class="secondary" onclick="listarUsuarios()">Actualizar Lista</button>
+        <ul id="listaUsuarios"></ul>
+    </div>
+
+    <div class="card">
+        <h2>Préstamo</h2>
+        <input type="number" id="idUsuarioPrestamo" placeholder="ID Usuario">
+        <input type="number" id="idRecursoPrestamo" placeholder="ID Recurso">
+        <button onclick="prestarRecurso()">Prestar</button>
+    </div>
+
+    <div class="card">
+        <h2>Devolución</h2>
+        <input type="number" id="idRecursoDevolver" placeholder="ID Recurso">
+        <button onclick="devolverRecurso()">Devolver</button>
+    </div>
+
+    <div class="card">
+        <h2>Pagar Multa</h2>
+        <input type="number" id="idUsuarioMulta" placeholder="ID Usuario">
+        <button class="danger" onclick="pagarMulta()">Pagar</button>
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
